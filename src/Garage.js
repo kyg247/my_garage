@@ -6,9 +6,9 @@ import styles from "./Styles";
 
 
 function Garage() {
-    const budget = 250000000;
+    const defaultBudget = 250000000;
     const [garage, setGarage] = useState([]);
-    const [budgetLeft, setBudgetLeft] = useState(budget);
+    const [budgetLeft, setBudgetLeft] = useState(defaultBudget);
 
 
     function selectCar(carData) {
@@ -33,7 +33,7 @@ function Garage() {
 
     return (
         <div style={styles.garageContainer}>
-            <Budget budgetAllocated={budget} budgetLeft={budgetLeft} />
+            <Budget budgetAllocated={defaultBudget} budgetLeft={budgetLeft} />
             <h1 text style={styles.textStyle}>My Garage</h1>
             <Cars budgetLeft={budgetLeft} garage={garage} deSelectCar={deSelectCar} />
             <h2 text style={styles.textStyle}>Available Cars</h2>
