@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import CarItem from "./CarItem";
+import styles from "./Styles";
 export default function Cars({ garage, deSelectCar }) {
 
     return (
-        <div>
-            <ul>
+        <div style={styles.carContainer}>
+
+            <ul style={styles.horizontalList}>
                 {
-                    garage.map((car, index) => {
+                    garage.map((car) => {
                         return (
-                            <CarItem car={car} deSelectCar={deSelectCar}/>
+                            <CarItem car={car} clickHandler={() => deSelectCar(car.id)} />
                         );
                     }
                     )

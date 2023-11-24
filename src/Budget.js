@@ -1,23 +1,14 @@
 import React, { useState } from "react";
+import styles from "./Styles";
 
-export default function Budget({ budgetLeft }) {
-    // You can define styles as objects
-    const containerStyle = {
-        backgroundColor: "#f2f2f2",
-        padding: "10px",
-        borderRadius: "5px",
-        margin: "10px",
-    };
+export default function Budget({ budgetAllocated, budgetLeft }) {
 
-    const textStyles = {
-        color: "#333",
-        fontSize: "18px",
-        fontWeight: "bold",
-    };
 
     return (
-        <div style={containerStyle}>
-            <p style={textStyles}>Budget Left: {budgetLeft}</p>
+        <div style={styles.budgetContainerStyle}>
+            <h2>Budget</h2>
+            <p style={styles.budgetTextStyles}>Budget Allocated: {budgetAllocated.toLocaleString("en-IN", { style: "currency", currency: "INR" })}</p>
+            <p style={styles.budgetTextStyles}>Budget Left: {budgetLeft.toLocaleString("en-IN", { style: "currency", currency: "INR" })}</p>
         </div>
     );
 }

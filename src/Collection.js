@@ -1,21 +1,18 @@
-import React from "react";
-import { cars } from "./Data";
+import React from 'react';
+import { cars } from './Data';
+import CarItem from './CarItem';
+import styles from './Styles';
 
 
-export default function Collection({ clickHandler }) {
+const Collection = ({ selectCar }) => {
+
     return (
-        <div>
-            {
-                cars.map((car, index) => {
-                    // console.log(JSON.stringify(car));
-                    return (
-                        <button key={index} data-car={JSON.stringify(car)} onClick={clickHandler}>
-                            {car.car}
-                        </button>
-                    );
-
-                })
-            }
+        <div style={styles.collectionContainer}>
+            {cars.map((car, index) => (
+                <CarItem key={index} car={car} clickHandler={selectCar} />
+            ))}
         </div>
     );
-}
+};
+
+export default Collection;
