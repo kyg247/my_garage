@@ -41,6 +41,7 @@ const styles = {
         flexWrap: 'wrap',
         justifyContent: 'center',
         backgroundColor: 'rgb(164, 181, 152)'
+        // backgroundColor: '#FFFFFF'
     },
     horizontalList: {
         listStyle: 'none',  // Remove default list styles

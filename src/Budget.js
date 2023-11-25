@@ -8,6 +8,7 @@ export default function Budget({ budgetAllocated, budgetLeft }) {
         <div style={styles.budgetContainerStyle}>
             <p style={styles.budgetTextStyles}>Budget: {budgetAllocated.toLocaleString("en-IN", { style: "currency", currency: "INR" })}</p>
             <p style={styles.budgetTextStyles}>Budget Left: {budgetLeft.toLocaleString("en-IN", { style: "currency", currency: "INR" })}</p>
+            <p style={styles.budgetTextStyles}>Collection Cost: {(budgetAllocated-budgetLeft).toLocaleString("en-IN", { style: "currency", currency: "INR" })}</p>
         </div>
     );
 }
