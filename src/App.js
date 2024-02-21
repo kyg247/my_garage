@@ -1,10 +1,8 @@
-import logo from './logo.svg';
-import './App.css';
-import Garage from './Garage';
+import logo from "./logo.svg";
+import "./App.css";
+import Garage from "./Garage";
 function App() {
-  return (
-    <Garage/>
-  );
+  return <Garage />;
 }
 
 export default App;
