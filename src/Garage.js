@@ -5,9 +5,25 @@ import Collection from "./Collection";
 import styles from "./Styles";
 
 function Garage() {
-  const defaultBudget = 250000000;
+  const [budget, setBudget] = useState(250000000);
+  const [budgetInput, setBudgetInput] = useState();
   const [garage, setGarage] = useState([]);
-  const [budgetLeft, setBudgetLeft] = useState(defaultBudget);
+  const [budgetLeft, setBudgetLeft] = useState(budget);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    console.log(event.target.value);
+    setBudget(parseInt(budgetInput));
+    setBudgetLeft(parseInt(budgetInput));
+    setBudgetInput(0);
+    setGarage([]);
+  }
+
+  const handleChange = (event) => {
+    // Update inputValue as the user types
+    setBudgetInput(event.target.value);
+    console.log(event.target.value);
+  };
 
   function selectCar(car) {
     if (car.cost <= budgetLeft) {
@@ -30,7 +46,7 @@ function Garage() {
 
   return (
     <div style={styles.garageContainer}>
-      <Budget budgetAllocated={defaultBudget} budgetLeft={budgetLeft} />
+      <Budget budgetAllocated={budget} budgetLeft={budgetLeft} budgetInput={budgetInput} handleChange={handleChange} handleSubmit={handleSubmit}/>
       <h1 text style={styles.textStyle}>
         My Garage
       </h1>

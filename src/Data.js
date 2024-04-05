@@ -35,6 +35,11 @@ export const cars = [
     img: "/images/s_class_maybach.jpeg",
   },
   {
+    car: "Modified Innvova",
+    cost: 5000000,
+    img: "/images/innova.jpeg"
+  },
+  {
     car: "Mercedes S Class",
     cost: 22500000,
     img: "/images/s_class.webp",
@@ -43,6 +48,11 @@ export const cars = [
     car: "Jeep Wrangler Rubicon",
     cost: 7800000,
     img: "/images/wrangler_rubicon.jpeg",
+  },
+  {
+    car: "Bullet Proof Fortuner",
+    cost: 12000000,
+    img: "/images/BP_fortuner.webp"
   },
   {
     car: "Range Rover",
@@ -103,5 +113,10 @@ export const cars = [
     car: "Mini Cooper",
     cost: 5000000,
     img: "/images/mini_cooper.webp",
+  },
+  {
+    car: "Tesla Model 3",
+    cost: 8000000,
+    img: "/images/tesla-model-3-midnight-silver-1.jpeg",
   },
 ];
