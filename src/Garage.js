@@ -5,7 +5,7 @@ import Collection from "./Collection";
 import styles from "./Styles";
 
 function Garage() {
-  const [budget, setBudget] = useState(250000000);
+  const [budget, setBudget] = useState(60000000);
   const [budgetInput, setBudgetInput] = useState();
   const [garage, setGarage] = useState([]);
   const [budgetLeft, setBudgetLeft] = useState(budget);
@@ -18,7 +18,6 @@ function Garage() {
     setBudgetInput(0);
     setGarage([]);
   }
-
   const handleChange = (event) => {
     // Update inputValue as the user types
     setBudgetInput(event.target.value);
@@ -26,6 +25,7 @@ function Garage() {
   };
 
   function selectCar(car) {
+    console.log("selected car", car);
     if (car.cost <= budgetLeft) {
       setBudgetLeft((prev) => prev - car.cost);
       setGarage((prev) => [...prev, { id: Date.now(), ...car }]);
@@ -35,6 +35,7 @@ function Garage() {
   }
 
   function deSelectCar(carId) {
+    console.log("selected car", carId);
     const deselectedCar = garage.find((car) => car.id === carId);
     setGarage((prev) => {
       return prev.filter((car) => {
