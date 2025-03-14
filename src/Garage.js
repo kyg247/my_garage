@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Cars from "./Cars";
 import Budget from "./Budget";
 import Collection from "./Collection";
+import SearchBar from "./SearchBar";
 import styles from "./Styles";
 
 function Garage() {
@@ -9,6 +10,7 @@ function Garage() {
   const [budgetInput, setBudgetInput] = useState();
   const [garage, setGarage] = useState([]);
   const [budgetLeft, setBudgetLeft] = useState(budget);
+  const [searchFilters, setSearchFilters] = useState(null);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -18,6 +20,7 @@ function Garage() {
     setBudgetInput(0);
     setGarage([]);
   }
+
   const handleChange = (event) => {
     // Update inputValue as the user types
     setBudgetInput(event.target.value);
@@ -45,9 +48,20 @@ function Garage() {
     setBudgetLeft((prev) => prev + deselectedCar.cost);
   }
 
+  const handleSearch = (filters) => {
+    setSearchFilters(filters);
+  };
+
   return (
     <div style={styles.garageContainer}>
-      <Budget budgetAllocated={budget} budgetLeft={budgetLeft} budgetInput={budgetInput} handleChange={handleChange} handleSubmit={handleSubmit}/>
+      <Budget
+        budgetAllocated={budget}
+        budgetLeft={budgetLeft}
+        budgetInput={budgetInput}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />
+      <SearchBar onSearch={handleSearch} />
       <h1 text style={styles.textStyle}>
         My Garage
       </h1>
@@ -55,7 +69,7 @@ function Garage() {
       <h2 text style={styles.textStyle}>
         Available Cars
       </h2>
-      <Collection selectCar={selectCar} />
+      <Collection selectCar={selectCar} filters={searchFilters} />
     </div>
   );
 }
