@@ -9,14 +9,15 @@ function Collection({ selectCar, filters }) {
     if (filters) {
       if (filters.type === "budget") {
         const budgetRanges = {
-          "Under ₹5 Lakh": { min: 0, max: 500000 },
-          "₹5-10 Lakh": { min: 500000, max: 1000000 },
-          "₹10-15 Lakh": { min: 1000000, max: 1500000 },
-          "₹15-20 Lakh": { min: 1500000, max: 2000000 },
-          "Above ₹20 Lakh": { min: 2000000, max: Infinity },
+          "Any Budget": { min: 0, max: Infinity },
+          "₹1-10 Lakh": { min: 100000, max: 1000000 },
+          "₹10-20 Lakh": { min: 1000000, max: 2000000 },
+          "₹20-50 Lakh": { min: 2000000, max: 5000000 },
+          "₹50-1 Crore": { min: 5000000, max: 10000000 },
+          "Above ₹1 Crore": { min: 10000000, max: Infinity },
         };
 
-        if (filters.budget) {
+        if (filters.budget && filters.budget !== "Any Budget") {
           const range = budgetRanges[filters.budget];
           filteredCars = filteredCars.filter(
             (car) => car.cost >= range.min && car.cost <= range.max
