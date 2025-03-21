@@ -7,6 +7,14 @@ function Collection({ selectCar, filters }) {
     let filteredCars = [...cars];
 
     if (filters) {
+      // Apply name search filter first if there's a search query
+      if (filters.searchQuery) {
+        const searchTerm = filters.searchQuery.toLowerCase();
+        filteredCars = filteredCars.filter((car) =>
+          car.car.toLowerCase().includes(searchTerm)
+        );
+      }
+
       if (filters.type === "budget") {
         const budgetRanges = {
           "Any Budget": { min: 0, max: Infinity },

@@ -9,6 +9,7 @@ import {
   Tabs,
   Tab,
   Container,
+  TextField,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import SpeedIcon from "@mui/icons-material/Speed";
@@ -94,6 +95,30 @@ const SearchButton = styled(Button)({
   },
 });
 
+const StyledTextField = styled(TextField)({
+  "& .MuiOutlinedInput-root": {
+    backgroundColor: "rgba(255,255,255,0.05)",
+    borderRadius: "12px",
+    color: "#ffffff",
+    transition: "all 0.3s ease",
+    "&:hover": {
+      backgroundColor: "rgba(255,255,255,0.1)",
+    },
+    "& fieldset": {
+      borderColor: "rgba(255,255,255,0.2)",
+    },
+    "&:hover fieldset": {
+      borderColor: "rgba(255,255,255,0.3)",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#ff4081",
+    },
+  },
+  "& .MuiInputBase-input": {
+    color: "#ffffff",
+  },
+});
+
 const budgetRanges = [
   "Any Budget",
   "₹1-10 Lakh",
@@ -135,6 +160,7 @@ const SearchBar = ({ onSearch }) => {
   const [selectedVehicleType, setSelectedVehicleType] =
     useState("All Vehicle Types");
   const [selectedMaker, setSelectedMaker] = useState("All Makers");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = () => {
     if (searchType === 0) {
@@ -142,13 +168,17 @@ const SearchBar = ({ onSearch }) => {
         type: "budget",
         budget: selectedBudget,
         vehicleType: selectedVehicleType,
+        searchQuery: searchQuery,
       });
     } else {
       onSearch({
         type: "maker",
         maker: selectedMaker,
+        searchQuery: searchQuery,
       });
     }
+    // Reset search query after search
+    setSearchQuery("");
   };
 
   return (
@@ -161,7 +191,7 @@ const SearchBar = ({ onSearch }) => {
         <Tab
           icon={<DirectionsCarIcon />}
           iconPosition="start"
-          label="By Model"
+          label="By Maker"
         />
       </StyledTabs>
 
@@ -213,6 +243,16 @@ const SearchBar = ({ onSearch }) => {
           </StyledFormControl>
         </Box>
       )}
+
+      <Box sx={{ mt: 2, mb: 2 }}>
+        <StyledTextField
+          fullWidth
+          placeholder="Search by vehicle name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          size="small"
+        />
+      </Box>
 
       <SearchButton
         variant="contained"
