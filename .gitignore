@@ -27,3 +27,4 @@ yarn-error.log*
 
 # cursor docs
 /cursor_docs
+.vercel
