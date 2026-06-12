@@ -1,5 +1,13 @@
+import { useState } from "react";
 import { styled } from "@mui/material/styles";
-import { Paper, Typography, Box } from "@mui/material";
+import {
+  Paper,
+  Typography,
+  Box,
+  Select,
+  MenuItem,
+  FormControl,
+} from "@mui/material";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import AllWheelDriveIcon from "@mui/icons-material/AllInclusiveOutlined";
 
@@ -64,14 +72,120 @@ const CarType = styled(Typography)({
   marginBottom: "8px",
 });
 
-export default function CarItem({ car, clickHandler }) {
+const VariantBadge = styled(Typography)({
+  color: "#ff4081",
+  fontSize: "0.75rem",
+  marginBottom: "8px",
+  textAlign: "center",
+  fontWeight: 500,
+  padding: "3px 10px",
+  backgroundColor: "rgba(255,64,129,0.1)",
+  borderRadius: "4px",
+  border: "1px solid rgba(255,64,129,0.25)",
+  width: "100%",
+});
+
+const VariantFormControl = styled(FormControl)({
+  width: "100%",
+  marginBottom: "10px",
+  "& .MuiOutlinedInput-root": {
+    color: "#ffffff",
+    fontSize: "0.8rem",
+    backgroundColor: "rgba(255,255,255,0.05)",
+    borderRadius: "8px",
+    "& fieldset": {
+      borderColor: "rgba(255,255,255,0.2)",
+    },
+    "&:hover fieldset": {
+      borderColor: "rgba(255,64,129,0.5)",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#ff4081",
+    },
+  },
+  "& .MuiSelect-icon": {
+    color: "#ff4081",
+  },
+});
+
+const variantMenuProps = {
+  PaperProps: {
+    sx: {
+      backgroundColor: "#1e1e1e",
+      border: "1px solid rgba(255,255,255,0.1)",
+      "& .MuiMenuItem-root": {
+        color: "#ffffff",
+        fontSize: "0.8rem",
+        "&:hover": { backgroundColor: "rgba(255,64,129,0.08)" },
+        "&.Mui-selected": {
+          backgroundColor: "rgba(255,64,129,0.16) !important",
+        },
+      },
+    },
+  },
+};
+
+export default function CarItem({ car, clickHandler, isGarage }) {
+  const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
+
+  const hasVariants = !isGarage && car.variants && car.variants.length > 0;
+  const activeVariant = hasVariants ? car.variants[selectedVariantIdx] : null;
+
+  const displayCost = activeVariant ? activeVariant.cost : car.cost;
+  const displayFuel = activeVariant ? activeVariant.fuel_type : car.fuel_type;
+  const displayDrivetrain = activeVariant
+    ? activeVariant.drivetrain
+    : car.drivetrain;
+
+  const handleCardClick = () => {
+    if (hasVariants) {
+      clickHandler({
+        ...car,
+        cost: activeVariant.cost,
+        fuel_type: activeVariant.fuel_type,
+        drivetrain: activeVariant.drivetrain,
+        selectedVariant: activeVariant.name,
+      });
+    } else {
+      clickHandler(car);
+    }
+  };
+
+  const handleVariantChange = (e) => {
+    setSelectedVariantIdx(e.target.value);
+  };
+
   return (
-    <StyledCarItem onClick={() => clickHandler(car)} elevation={0}>
+    <StyledCarItem onClick={handleCardClick} elevation={0}>
       <CarImage src={car.img} alt={car.car} />
       <CarName>{car.car}</CarName>
       <CarType>{car.type}</CarType>
+
+      {isGarage && car.selectedVariant && (
+        <VariantBadge>{car.selectedVariant}</VariantBadge>
+      )}
+
+      {hasVariants && (
+        <VariantFormControl
+          size="small"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Select
+            value={selectedVariantIdx}
+            onChange={handleVariantChange}
+            MenuProps={variantMenuProps}
+          >
+            {car.variants.map((v, i) => (
+              <MenuItem key={i} value={i}>
+                {v.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </VariantFormControl>
+      )}
+
       <CarPrice>
-        {car.cost.toLocaleString("en-IN", {
+        {displayCost.toLocaleString("en-IN", {
           style: "currency",
           currency: "INR",
         })}
@@ -79,11 +193,11 @@ export default function CarItem({ car, clickHandler }) {
       <CarInfo>
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
           <LocalGasStationIcon />
-          <span>{car.fuel_type}</span>
+          <span>{displayFuel}</span>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
           <AllWheelDriveIcon />
-          <span>{car.drivetrain}</span>
+          <span>{displayDrivetrain}</span>
         </Box>
       </CarInfo>
     </StyledCarItem>

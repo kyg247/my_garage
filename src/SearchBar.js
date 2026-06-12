@@ -152,6 +152,9 @@ const carMakers = [
   "Hyundai",
   "Tata",
   "Mahindra",
+  "Audi",
+  "Lotus",
+  "McLaren",
 ];
 
 const SearchBar = ({ onSearch }) => {

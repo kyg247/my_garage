@@ -5,7 +5,7 @@ export default function Cars({ garage, deSelectCar }) {
     <div style={styles.carContainer}>
       <ul style={styles.horizontalList}>
         {garage.map((car) => {
-          return <CarItem car={car} clickHandler={() => deSelectCar(car.id)} />;
+          return <CarItem car={car} clickHandler={() => deSelectCar(car.id)} isGarage={true} />;
         })}
       </ul>
     </div>
