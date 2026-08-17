@@ -1318,6 +1318,35 @@ export const cars = [
     }
   },
   {
+    "car": "Toyota Vellfire",
+    "cost": 15292547,
+    "img": "/images/vellfire.jpg",
+    "maker": "Toyota",
+    "type": "Minivan",
+    "fuel_type": "Hybrid",
+    "drivetrain": "2WD",
+    "variants": [
+      {
+        "name": "Hi Hybrid (Electric + Petrol) Automatic",
+        "cost": 15292547,
+        "fuel_type": "Hybrid",
+        "drivetrain": "2WD"
+      },
+      {
+        "name": "VIP – Executive Lounge Hybrid (Electric + Petrol) Automatic",
+        "cost": 16563676,
+        "fuel_type": "Hybrid",
+        "drivetrain": "2WD"
+      }
+    ],
+    "price_meta": {
+      "source": "carwale",
+      "city": "Bangalore",
+      "asOf": "2026-08-15",
+      "url": "https://www.carwale.com/toyota-cars/vellfire/price-in-bangalore/"
+    }
+  },
+  {
     "car": "Range Rover Sentinel",
     "cost": 95000000,
     "img": "/images/rr_sentinel.webp",
