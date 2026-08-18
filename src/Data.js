@@ -1320,7 +1320,7 @@ export const cars = [
   {
     "car": "Toyota Vellfire",
     "cost": 15292547,
-    "img": "/images/vellfire.jpg",
+    "img": "/images/vellfire.avif",
     "maker": "Toyota",
     "type": "Minivan",
     "fuel_type": "Hybrid",
