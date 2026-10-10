@@ -3,6 +3,8 @@ import Cars from "./Cars";
 import Budget from "./Budget";
 import Collection from "./Collection";
 import SearchBar from "./SearchBar";
+import FtaSimulator from "./FtaSimulator";
+import { applyFtaToGarageCar } from "./fta";
 import { Container, Typography, Box, Paper } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
@@ -59,13 +61,12 @@ function Garage() {
   const [budget, setBudget] = useState(60000000);
   const [budgetInput, setBudgetInput] = useState();
   const [garage, setGarage] = useState([]);
-  const [budgetLeft, setBudgetLeft] = useState(budget);
   const [searchFilters, setSearchFilters] = useState(null);
+  const [ftaHorizon, setFtaHorizon] = useState(0);
 
   function handleSubmit(event) {
     event.preventDefault();
     setBudget(parseInt(budgetInput));
-    setBudgetLeft(parseInt(budgetInput));
     setBudgetInput(0);
     setGarage([]);
   }
@@ -74,19 +75,38 @@ function Garage() {
     setBudgetInput(event.target.value);
   };
 
+  const pricedGarage = garage.map((car) =>
+    applyFtaToGarageCar(car, { horizonYears: ftaHorizon })
+  );
+  const collectionCost = pricedGarage.reduce(
+    (sum, car) => sum + (car.cost || 0),
+    0
+  );
+  const remainingBudget = budget - collectionCost;
+
   function selectCar(car) {
-    if (car.cost <= budgetLeft) {
-      setBudgetLeft((prev) => prev - car.cost);
-      setGarage((prev) => [...prev, { id: Date.now(), ...car }]);
+    const listedCost = car.listedCost ?? car.cost;
+    const priced = applyFtaToGarageCar(
+      { ...car, listedCost, cost: listedCost },
+      { horizonYears: ftaHorizon }
+    );
+    if (priced.cost <= remainingBudget) {
+      setGarage((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          ...car,
+          cost: listedCost,
+          listedCost,
+        },
+      ]);
     } else {
       alert("Insufficient Budget!");
     }
   }
 
   function deSelectCar(carId) {
-    const deselectedCar = garage.find((car) => car.id === carId);
     setGarage((prev) => prev.filter((car) => car.id !== carId));
-    setBudgetLeft((prev) => prev + deselectedCar.cost);
   }
 
   const handleSearch = (filters) => {
@@ -102,11 +122,15 @@ function Garage() {
 
       <Budget
         budgetAllocated={budget}
-        budgetLeft={budgetLeft}
+        budgetLeft={remainingBudget}
         budgetInput={budgetInput}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
       />
+
+      <Box sx={{ my: 4 }}>
+        <FtaSimulator horizonYears={ftaHorizon} onHorizonChange={setFtaHorizon} />
+      </Box>
 
       <Box sx={{ my: 4 }}>
         <SearchBar onSearch={handleSearch} />
@@ -118,8 +142,8 @@ function Garage() {
           My Collection
         </SectionTitle>
         <Cars
-          budgetLeft={budgetLeft}
-          garage={garage}
+          budgetLeft={remainingBudget}
+          garage={pricedGarage}
           deSelectCar={deSelectCar}
         />
       </StyledSection>
@@ -129,7 +153,11 @@ function Garage() {
           <StorefrontIcon sx={{ fontSize: 32 }} />
           Available Cars
         </SectionTitle>
-        <Collection selectCar={selectCar} filters={searchFilters} />
+        <Collection
+          selectCar={selectCar}
+          filters={searchFilters}
+          ftaHorizon={ftaHorizon}
+        />
       </StyledSection>
     </MainContainer>
   );

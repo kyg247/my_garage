@@ -1,10 +1,13 @@
 import { cars } from "./Data";
 import CarItem from "./CarItem";
 import styles from "./Styles";
+import { applyFtaToCatalogCar } from "./fta";
 
-function Collection({ selectCar, filters }) {
+function Collection({ selectCar, filters, ftaHorizon = 0 }) {
   const filterCars = () => {
-    let filteredCars = [...cars];
+    let filteredCars = cars.map((car) =>
+      applyFtaToCatalogCar(car, { horizonYears: ftaHorizon })
+    );
 
     if (filters) {
       // Apply name search filter first if there's a search query

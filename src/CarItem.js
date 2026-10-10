@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import AllWheelDriveIcon from "@mui/icons-material/AllInclusiveOutlined";
+import { formatInrCompact } from "./fta";
 
 const StyledCarItem = styled(Paper)({
   borderRadius: "16px",
@@ -52,7 +53,58 @@ const CarPrice = styled(Typography)({
   color: "#ff4081",
   fontSize: "1.1rem",
   fontWeight: 500,
-  marginBottom: "12px",
+  marginBottom: "4px",
+});
+
+const ListedPrice = styled(Typography)({
+  color: "rgba(255,255,255,0.4)",
+  fontSize: "0.8rem",
+  textDecoration: "line-through",
+  marginBottom: "4px",
+});
+
+const FtaBadge = styled(Typography)({
+  color: "#69f0ae",
+  fontSize: "0.7rem",
+  marginBottom: "10px",
+  textAlign: "center",
+  fontWeight: 500,
+  padding: "2px 8px",
+  backgroundColor: "rgba(105,240,174,0.1)",
+  borderRadius: "4px",
+  border: "1px solid rgba(105,240,174,0.25)",
+});
+
+const FtaNote = styled(Typography)({
+  color: "rgba(255,255,255,0.45)",
+  fontSize: "0.68rem",
+  textAlign: "center",
+  marginBottom: "10px",
+  lineHeight: 1.35,
+});
+
+const StackBox = styled(Box)({
+  width: "100%",
+  marginBottom: "10px",
+  padding: "8px 10px",
+  borderRadius: "8px",
+  backgroundColor: "rgba(255,255,255,0.04)",
+  border: "1px solid rgba(255,255,255,0.08)",
+});
+
+const StackRow = styled(Box)({
+  display: "flex",
+  justifyContent: "space-between",
+  gap: "8px",
+  color: "rgba(255,255,255,0.55)",
+  fontSize: "0.64rem",
+  lineHeight: 1.55,
+});
+
+const StackValue = styled("span")({
+  color: "rgba(255,255,255,0.82)",
+  fontVariantNumeric: "tabular-nums",
+  textAlign: "right",
 });
 
 const CarInfo = styled(Box)({
@@ -132,16 +184,23 @@ export default function CarItem({ car, clickHandler, isGarage }) {
   const activeVariant = hasVariants ? car.variants[selectedVariantIdx] : null;
 
   const displayCost = activeVariant ? activeVariant.cost : car.cost;
+  const listedCost = activeVariant
+    ? activeVariant.listedCost ?? car.listedCost
+    : car.listedCost;
+  const fta = activeVariant?.fta || car.fta;
   const displayFuel = activeVariant ? activeVariant.fuel_type : car.fuel_type;
   const displayDrivetrain = activeVariant
     ? activeVariant.drivetrain
     : car.drivetrain;
+  const showFtaSaving = listedCost && displayCost < listedCost;
 
   const handleCardClick = () => {
     if (hasVariants) {
       clickHandler({
         ...car,
         cost: activeVariant.cost,
+        listedCost: activeVariant.listedCost ?? listedCost,
+        fta: activeVariant.fta || car.fta,
         fuel_type: activeVariant.fuel_type,
         drivetrain: activeVariant.drivetrain,
         selectedVariant: activeVariant.name,
@@ -184,12 +243,68 @@ export default function CarItem({ car, clickHandler, isGarage }) {
         </VariantFormControl>
       )}
 
+      {showFtaSaving && (
+        <ListedPrice>
+          {listedCost.toLocaleString("en-IN", {
+            style: "currency",
+            currency: "INR",
+          })}
+        </ListedPrice>
+      )}
       <CarPrice>
         {displayCost.toLocaleString("en-IN", {
           style: "currency",
           currency: "INR",
         })}
       </CarPrice>
+      {showFtaSaving && (
+        <FtaBadge>
+          {fta?.savingPct}% lower · {Number(fta?.nextDuty).toFixed(2)}% duty
+          {fta?.meta?.origin ? ` · ${fta.meta.origin}` : ""}
+          {fta?.meta?.importType ? ` ${fta.meta.importType}` : ""}
+        </FtaBadge>
+      )}
+      {showFtaSaving && fta?.stack?.today && fta?.stack?.next && (
+        <StackBox>
+          <StackRow>
+            <span>CIF (held)</span>
+            <StackValue>{formatInrCompact(fta.stack.next.cif)}</StackValue>
+          </StackRow>
+          <StackRow>
+            <span>Customs {fta.currentDuty}% → {Number(fta.nextDuty).toFixed(2)}%</span>
+            <StackValue>
+              {formatInrCompact(fta.stack.today.customs)} → {formatInrCompact(fta.stack.next.customs)}
+            </StackValue>
+          </StackRow>
+          <StackRow>
+            <span>IGST {(fta.stack.next.gstRate * 100).toFixed(0)}%</span>
+            <StackValue>
+              {formatInrCompact(fta.stack.today.igst)} → {formatInrCompact(fta.stack.next.igst)}
+            </StackValue>
+          </StackRow>
+          <StackRow>
+            <span>KA RTO {(fta.stack.next.rtoRate * 100).toFixed(2)}%</span>
+            <StackValue>
+              {formatInrCompact(fta.stack.today.rto)} → {formatInrCompact(fta.stack.next.rto)}
+            </StackValue>
+          </StackRow>
+          <StackRow>
+            <span>TCS + insurance</span>
+            <StackValue>
+              {formatInrCompact(fta.stack.today.tcs + fta.stack.today.insurance)} →{" "}
+              {formatInrCompact(fta.stack.next.tcs + fta.stack.next.insurance)}
+            </StackValue>
+          </StackRow>
+        </StackBox>
+      )}
+      {!showFtaSaving && fta?.meta?.origin && fta.meta.origin !== "NONE" && (
+        <FtaNote>
+          {fta.meta.origin} · {fta.meta.importType}
+          {fta.meta.horizonYears > 0 && fta.meta.note
+            ? ` · ${fta.meta.note}`
+            : ""}
+        </FtaNote>
+      )}
       <CarInfo>
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
           <LocalGasStationIcon />

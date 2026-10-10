@@ -753,7 +753,7 @@ export const cars = [
   },
   {
     "car": "Rolls Royce Ghost",
-    "cost": 46250000,
+    "cost": 102830358,
     "img": "/images/RR_GHOST.jpg",
     "maker": "Rolls Royce",
     "type": "Sedan",
@@ -761,19 +761,24 @@ export const cars = [
     "drivetrain": "AWD",
     "variants": [
       {
-        "name": "6.5",
-        "cost": 46250000
+        "name": "Series II Standard",
+        "cost": 102830358
       },
       {
-        "name": "Extended Wheelbase",
-        "cost": 52750000
+        "name": "Series II Extended Wheelbase",
+        "cost": 117072532
+      },
+      {
+        "name": "Series II Black Badge",
+        "cost": 120862788
       }
     ],
     "price_meta": {
-      "source": "carwale",
+      "source": "zigwheels",
       "city": "Bangalore",
-      "asOf": "2026-08-15",
-      "url": "https://www.carwale.com/rolls-royce-cars/ghost/price-in-bangalore/"
+      "asOf": "2026-10-09",
+      "url": "https://www.zigwheels.com/rolls-royce-cars/ghost-series-ii/on-road-price-bangalore/",
+      "note": "Current Ghost Series II Bangalore on-road (Oct 2026). Earlier CarWale figure was the discontinued 2014–2020 Ghost."
     }
   },
   {
@@ -1372,7 +1377,7 @@ export const cars = [
   },
   {
     "car": "Rolls-Royce Cullinan",
-    "cost": 80852629,
+    "cost": 128609100,
     "img": "/images/cullinan.webp",
     "maker": "Rolls Royce",
     "type": "SUV",
@@ -1380,15 +1385,19 @@ export const cars = [
     "drivetrain": "AWD",
     "variants": [
       {
-        "name": "SUV",
-        "cost": 80852629
+        "name": "Series II",
+        "cost": 128609100
+      },
+      {
+        "name": "Black Badge Series II",
+        "cost": 148404600
       }
     ],
     "price_meta": {
-      "source": "carwale",
+      "source": "autocar",
       "city": "Bangalore",
-      "asOf": "2026-08-15",
-      "url": "https://www.carwale.com/rolls-royce-cars/cullinan/price-in-bangalore/"
+      "asOf": "2026-10-09",
+      "url": "https://www.autocarindia.com/cars/rolls-royce/cullinan/price-in-bangalore"
     }
   },
   {
