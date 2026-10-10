@@ -7,6 +7,7 @@ import {
   Select,
   MenuItem,
   FormControl,
+  Button,
 } from "@mui/material";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import AllWheelDriveIcon from "@mui/icons-material/AllInclusiveOutlined";
@@ -157,6 +158,19 @@ const VariantFormControl = styled(FormControl)({
   },
   "& .MuiSelect-icon": {
     color: "#ff4081",
+  },
+});
+
+const ActionButton = styled(Button)({
+  width: "100%",
+  marginTop: "12px",
+  textTransform: "none",
+  fontWeight: 600,
+  borderRadius: "10px",
+  color: "#ffffff",
+  backgroundColor: "#ff4081",
+  "&:hover": {
+    backgroundColor: "#f50057",
   },
 });
 
@@ -315,6 +329,14 @@ export default function CarItem({ car, clickHandler, isGarage }) {
           <span>{displayDrivetrain}</span>
         </Box>
       </CarInfo>
+      <ActionButton
+        onClick={(e) => {
+          e.stopPropagation();
+          handleCardClick();
+        }}
+      >
+        {isGarage ? "Remove" : "Add to garage"}
+      </ActionButton>
     </StyledCarItem>
   );
 }
