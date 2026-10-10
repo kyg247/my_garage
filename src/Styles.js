@@ -29,10 +29,12 @@ const styles = {
     fontSize: "14px",
   },
   collectionContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, 280px)",
     justifyContent: "center",
+    alignItems: "stretch",
+    gap: "24px",
+    padding: "12px",
     backgroundColor: "rgb(107, 151, 156)",
   },
   carContainer: {
@@ -44,12 +46,14 @@ const styles = {
     // backgroundColor: '#FFFFFF'
   },
   horizontalList: {
-    listStyle: "none", // Remove default list styles
-    padding: 0, // Remove default list padding
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
+    listStyle: "none",
+    padding: 0,
+    width: "100%",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, 280px)",
     justifyContent: "center",
+    alignItems: "stretch",
+    gap: "24px",
   },
   budgetContainerStyle: {
     backgroundColor: "#f2f2f2",

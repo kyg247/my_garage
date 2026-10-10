@@ -20,8 +20,9 @@ const StyledCarItem = styled(Paper)({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  width: "280px",
-  margin: "12px",
+  width: "100%",
+  height: "100%",
+  boxSizing: "border-box",
   background:
     "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 100%)",
   backdropFilter: "blur(10px)",
@@ -48,6 +49,10 @@ const CarName = styled(Typography)({
   color: "#ffffff",
   marginBottom: "8px",
   textAlign: "center",
+  minHeight: "2.6em",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 });
 
 const CarPrice = styled(Typography)({
@@ -163,7 +168,7 @@ const VariantFormControl = styled(FormControl)({
 
 const ActionButton = styled(Button)({
   width: "100%",
-  marginTop: "12px",
+  marginTop: "auto",
   textTransform: "none",
   fontWeight: 600,
   borderRadius: "10px",
@@ -171,6 +176,30 @@ const ActionButton = styled(Button)({
   backgroundColor: "#ff4081",
   "&:hover": {
     backgroundColor: "#f50057",
+  },
+});
+
+const MetaSlot = styled(Box)({
+  width: "100%",
+  minHeight: "44px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "flex-start",
+});
+
+const StackToggle = styled("summary")({
+  cursor: "pointer",
+  color: "rgba(255,255,255,0.5)",
+  fontSize: "0.68rem",
+  textAlign: "center",
+  listStyle: "none",
+  "&::-webkit-details-marker": { display: "none" },
+  "&::before": {
+    content: "'▸ '",
+  },
+  "details[open] > &::before": {
+    content: "'▾ '",
   },
 });
 
@@ -238,88 +267,109 @@ export default function CarItem({ car, clickHandler, isGarage }) {
         <VariantBadge>{car.selectedVariant}</VariantBadge>
       )}
 
-      {hasVariants && (
-        <VariantFormControl
-          size="small"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Select
-            value={selectedVariantIdx}
-            onChange={handleVariantChange}
-            MenuProps={variantMenuProps}
+      <Box sx={{ width: "100%", minHeight: "48px", mb: 0.5 }}>
+        {hasVariants && (
+          <VariantFormControl
+            size="small"
+            onClick={(e) => e.stopPropagation()}
           >
-            {car.variants.map((v, i) => (
-              <MenuItem key={i} value={i}>
-                {v.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </VariantFormControl>
-      )}
+            <Select
+              value={selectedVariantIdx}
+              onChange={handleVariantChange}
+              MenuProps={variantMenuProps}
+            >
+              {car.variants.map((v, i) => (
+                <MenuItem key={i} value={i}>
+                  {v.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </VariantFormControl>
+        )}
+      </Box>
 
-      {showFtaSaving && (
-        <ListedPrice>
-          {listedCost.toLocaleString("en-IN", {
+      <Box
+        sx={{
+          minHeight: "52px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "flex-end",
+        }}
+      >
+        {showFtaSaving && (
+          <ListedPrice>
+            {listedCost.toLocaleString("en-IN", {
+              style: "currency",
+              currency: "INR",
+            })}
+          </ListedPrice>
+        )}
+        <CarPrice>
+          {displayCost.toLocaleString("en-IN", {
             style: "currency",
             currency: "INR",
           })}
-        </ListedPrice>
-      )}
-      <CarPrice>
-        {displayCost.toLocaleString("en-IN", {
-          style: "currency",
-          currency: "INR",
-        })}
-      </CarPrice>
-      {showFtaSaving && (
-        <FtaBadge>
-          {fta?.savingPct}% lower · {Number(fta?.nextDuty).toFixed(2)}% duty
-          {fta?.meta?.origin ? ` · ${fta.meta.origin}` : ""}
-          {fta?.meta?.importType ? ` ${fta.meta.importType}` : ""}
-        </FtaBadge>
-      )}
-      {showFtaSaving && fta?.stack?.today && fta?.stack?.next && (
-        <StackBox>
-          <StackRow>
-            <span>CIF (held)</span>
-            <StackValue>{formatInrCompact(fta.stack.next.cif)}</StackValue>
-          </StackRow>
-          <StackRow>
-            <span>Customs {fta.currentDuty}% → {Number(fta.nextDuty).toFixed(2)}%</span>
-            <StackValue>
-              {formatInrCompact(fta.stack.today.customs)} → {formatInrCompact(fta.stack.next.customs)}
-            </StackValue>
-          </StackRow>
-          <StackRow>
-            <span>IGST {(fta.stack.next.gstRate * 100).toFixed(0)}%</span>
-            <StackValue>
-              {formatInrCompact(fta.stack.today.igst)} → {formatInrCompact(fta.stack.next.igst)}
-            </StackValue>
-          </StackRow>
-          <StackRow>
-            <span>KA RTO {(fta.stack.next.rtoRate * 100).toFixed(2)}%</span>
-            <StackValue>
-              {formatInrCompact(fta.stack.today.rto)} → {formatInrCompact(fta.stack.next.rto)}
-            </StackValue>
-          </StackRow>
-          <StackRow>
-            <span>TCS + insurance</span>
-            <StackValue>
-              {formatInrCompact(fta.stack.today.tcs + fta.stack.today.insurance)} →{" "}
-              {formatInrCompact(fta.stack.next.tcs + fta.stack.next.insurance)}
-            </StackValue>
-          </StackRow>
-        </StackBox>
-      )}
-      {!showFtaSaving && fta?.meta?.origin && fta.meta.origin !== "NONE" && (
-        <FtaNote>
-          {fta.meta.origin} · {fta.meta.importType}
-          {fta.meta.horizonYears > 0 && fta.meta.note
-            ? ` · ${fta.meta.note}`
-            : ""}
-        </FtaNote>
-      )}
-      <CarInfo>
+        </CarPrice>
+      </Box>
+      <MetaSlot>
+        {showFtaSaving && (
+          <FtaBadge>
+            {fta?.savingPct}% lower · {Number(fta?.nextDuty).toFixed(2)}% duty
+            {fta?.meta?.origin ? ` · ${fta.meta.origin}` : ""}
+            {fta?.meta?.importType ? ` ${fta.meta.importType}` : ""}
+          </FtaBadge>
+        )}
+        {showFtaSaving && fta?.stack?.today && fta?.stack?.next && (
+          <Box
+            component="details"
+            onClick={(e) => e.stopPropagation()}
+            sx={{ width: "100%", mb: 1 }}
+          >
+            <StackToggle>Duty stack</StackToggle>
+            <StackBox>
+              <StackRow>
+                <span>CIF (held)</span>
+                <StackValue>{formatInrCompact(fta.stack.next.cif)}</StackValue>
+              </StackRow>
+              <StackRow>
+                <span>Customs {fta.currentDuty}% → {Number(fta.nextDuty).toFixed(2)}%</span>
+                <StackValue>
+                  {formatInrCompact(fta.stack.today.customs)} → {formatInrCompact(fta.stack.next.customs)}
+                </StackValue>
+              </StackRow>
+              <StackRow>
+                <span>IGST {(fta.stack.next.gstRate * 100).toFixed(0)}%</span>
+                <StackValue>
+                  {formatInrCompact(fta.stack.today.igst)} → {formatInrCompact(fta.stack.next.igst)}
+                </StackValue>
+              </StackRow>
+              <StackRow>
+                <span>KA RTO {(fta.stack.next.rtoRate * 100).toFixed(2)}%</span>
+                <StackValue>
+                  {formatInrCompact(fta.stack.today.rto)} → {formatInrCompact(fta.stack.next.rto)}
+                </StackValue>
+              </StackRow>
+              <StackRow>
+                <span>TCS + insurance</span>
+                <StackValue>
+                  {formatInrCompact(fta.stack.today.tcs + fta.stack.today.insurance)} →{" "}
+                  {formatInrCompact(fta.stack.next.tcs + fta.stack.next.insurance)}
+                </StackValue>
+              </StackRow>
+            </StackBox>
+          </Box>
+        )}
+        {!showFtaSaving && fta?.meta?.origin && fta.meta.origin !== "NONE" && (
+          <FtaNote>
+            {fta.meta.origin} · {fta.meta.importType}
+            {fta.meta.horizonYears > 0 && fta.meta.note
+              ? ` · ${fta.meta.note}`
+              : ""}
+          </FtaNote>
+        )}
+      </MetaSlot>
+      <CarInfo sx={{ mb: 1.5 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
           <LocalGasStationIcon />
           <span>{displayFuel}</span>
